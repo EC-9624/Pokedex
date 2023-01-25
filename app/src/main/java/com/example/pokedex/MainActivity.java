@@ -27,7 +27,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         assetManager = getResources().getAssets();
+
+        //create list
+        ArrayList<PokemonModel> pokemonModelArrayList = new ArrayList<>();
         try {
+            //Building PokemonModel put it in arraylist
             JSONArray array = new JSONArray(loadJson());
             Log.d("array.length", "onCreate: " + array.length());
             for(int i = 0; i < array.length();i++){
@@ -43,11 +47,15 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject base = object.getJSONObject("base");
                 String HP = base.getString("HP");
                 String attack = base.getString("Attack");
-                String defence = base.getString("Defence");
+                String defense = base.getString("Defense");
                 String sp_atk = base.getString("Sp. Attack");
                 String sp_def = base.getString("Sp. Defense");
                 String speed = base.getString("Speed");
+
+                pokemonModelArrayList.add(new PokemonModel(id,english,japanese,type_1,type_2,HP,attack,defense,sp_atk,sp_def,speed));
             }
+
+            Log.d("list", "onCreate: " + pokemonModelArrayList.get(800).getType_1() +","+ pokemonModelArrayList.get(800).getType_2());
 
 
         } catch (JSONException e){
@@ -55,11 +63,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //read JSON File From assets
     public String loadJson(){
         String json = null;
         try {
             inputStream = this.getAssets().open("pokedex.json");
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
             int size = inputStream.available();
             byte[] buffer = new byte[size];
