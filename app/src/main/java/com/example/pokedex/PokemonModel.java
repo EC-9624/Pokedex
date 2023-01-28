@@ -12,6 +12,8 @@ public class PokemonModel {
     private String sp_atk;
     private String sp_def;
     private String speed;
+    private String img_url;
+    private String sprites_url;
 
     //constructor
     public PokemonModel(int id,String en_name,String jp_name,String type_1,String type_2,String HP
@@ -20,6 +22,9 @@ public class PokemonModel {
         this.id = id; this.en_name = en_name; this.jp_name = jp_name; this.type_1 = type_1;
         this.type_2 =type_2; this.HP = HP; this.attack = attack; this.defense = defense;
         this.sp_atk = sp_atk; this.sp_def = sp_def; this.speed = speed;
+
+        this.img_url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id+".png";
+        this.sprites_url ="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+id+".png";
     }
 
     public int getId() {
@@ -65,4 +70,8 @@ public class PokemonModel {
     public String getSpeed() {
         return speed;
     }
+
+    public String getImg_url(){return  img_url;}
+
+    public String getSprites_url(){return  sprites_url;}
 }
