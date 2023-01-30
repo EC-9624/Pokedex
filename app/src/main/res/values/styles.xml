@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CornerCut">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+        <item name="cornerSizeBottomLeft">10%</item>
+        <item name="cornerSizeBottomRight">10%</item>
+    </style>
+
+    <style name="progressBarBlue" parent="@style/Theme.AppCompat">
+        <item name="colorAccent">@color/water</item>
+    </style>
+
+    <style name="progressBarRed" parent="@style/Theme.AppCompat">
+        <item name="colorAccent">@color/fighting</item>
+    </style>
+
+    <style name="progressBarPurple" parent="@style/Theme.AppCompat">
+        <item name="colorAccent">@color/ghost</item>
+    </style>
+
+</resources>

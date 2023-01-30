@@ -1,6 +1,7 @@
 package com.example.pokedex;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,21 +9,32 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+//import android.widget.SearchView;
+import  androidx.appcompat.widget.SearchView;
+
+import android.widget.ImageButton;
+import android.widget.ImageSwitcher;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity implements RecycleViewInterface{
     AssetManager assetManager;
     InputStream inputStream;
     ArrayList<PokemonModel> pokemonModelArrayList = new ArrayList<>();
+    private Poke_RecycleViewAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
             }
 
             //Pass Model List to Recycler View AFTER creating The model
-            Poke_RecycleViewAdapter adapter = new Poke_RecycleViewAdapter(this,pokemonModelArrayList,this);
+            adapter = new Poke_RecycleViewAdapter(this,pokemonModelArrayList,this);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -84,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
             inputStream.close();
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, StandardCharsets.UTF_8);
             //Log.d("json", "loadJson: " + json);
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,5 +120,108 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         intent.putExtra("img_url",pokemonModelArrayList.get(position).getImg_url());
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onFavClicked(int position) {
+
+
+        if(pokemonModelArrayList.get(position).getFav() == false){
+            pokemonModelArrayList.get(position).setFav(true);
+            Toast.makeText(this,"Add To Favorites....",Toast.LENGTH_SHORT).show();
+        }else if(pokemonModelArrayList.get(position).getFav() == true){
+            pokemonModelArrayList.get(position).setFav(false);
+            Toast.makeText(this,"Removed From Favorites....",Toast.LENGTH_SHORT).show();
+        }
+        //Log.d("isFav", "onFavClicked: " + pokemonModelArrayList.get(position).getFav());
+    }
+
+
+    //create menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        //inflate
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.search_menu,menu);
+
+        MenuItem searchItem = menu.findItem(R.id.actionSearch);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterText(newText);
+                return true;
+            }
+        });
+        MenuItem favItem = menu.findItem(R.id.action_Fav);
+        favItem.setChecked(false);
+
+        favItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+
+                if(favItem.isChecked() == false){
+                    favFilter();
+                    favItem.setIcon(R.drawable.ic_baseline_star_24);
+                    favItem.setChecked(!favItem.isChecked());
+
+
+                } else if (favItem.isChecked() == true){
+                    clearFilter();
+                    favItem.setIcon(R.drawable.ic_baseline_star_border_24);
+                    favItem.setChecked(!favItem.isChecked());
+
+                }
+
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+
+
+    //search filter
+    private void filterText(String text) {
+
+        ArrayList<PokemonModel> filteredList = new ArrayList<>();
+        for (PokemonModel pokemon : pokemonModelArrayList) {
+            if (pokemon.getEn_name().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(pokemon);
+            }
+        }
+        if (filteredList.isEmpty()) {
+            Toast.makeText(this, "No Data Found...", Toast.LENGTH_SHORT).show();
+        } else {
+            pokemonModelArrayList = filteredList;
+            adapter.filterList(filteredList);
+        }
+    }
+
+    private void favFilter(){
+        ArrayList<PokemonModel> favFilteredList = new ArrayList<>();
+
+        for(PokemonModel pokemon : pokemonModelArrayList){
+            if(pokemon.getFav() == true){
+                favFilteredList.add(pokemon);
+            } else {
+                pokemonModelArrayList = favFilteredList;
+                adapter.filterList(favFilteredList);
+            }
+        }
+    }
+
+    private void clearFilter(){
+        adapter.filterList(pokemonModelArrayList);
     }
 }

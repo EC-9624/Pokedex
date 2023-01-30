@@ -2,6 +2,8 @@ package com.example.pokedex;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -69,9 +71,37 @@ public class DetailActivity extends AppCompatActivity {
         spDefbar.setProgress(Integer.parseInt(sp_def));
         speedBar.setProgress(Integer.parseInt(speed));
 
+        CardView cardView = findViewById(R.id.cv2);
+        cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.lightgray));
 
 
 
+    }
+
+    private int getCardColor() {
+
+        int result = 0;
+        switch (getIntent().getStringExtra("Type_1")){
+            case "Normal": result = R.color.normal; break;
+            case "Fire": result = R.color.fire;break;
+            case "Water": result = R.color.water; break;
+            case "Electric" : result = R.color.eletric; break;
+            case "Grass" : result = R.color.grass; break;
+            case "Ice" : result = R.color.ice; break;
+            case "Fighting" : result = R.color.fighting; break;
+            case "Bug" : result = R.color.bug; break;
+            case "Poison" : result = R.color.poison; break;
+            case "Ground" : result = R.color.ground; break;
+            case "Flying" : result = R.color.flying; break;
+            case "Psychic" : result = R.color.psychic; break;
+            case "Rock" : result = R.color.rock; break;
+            case "Ghost" : result = R.color.ghost; break;
+            case "Dragon" : result = R.color.dragon; break;
+            case "Dark" : result = R.color.dark; break;
+            case "Steel" : result = R.color.steel; break;
+            case "Fairy" : result = R.color.fairy; break;
+        }
+        return result;
 
     }
 }

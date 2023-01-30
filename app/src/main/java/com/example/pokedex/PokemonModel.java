@@ -14,6 +14,7 @@ public class PokemonModel {
     private String speed;
     private String img_url;
     private String sprites_url;
+    private Boolean isFav = false;
 
     //constructor
     public PokemonModel(int id,String en_name,String jp_name,String type_1,String type_2,String HP
@@ -74,4 +75,9 @@ public class PokemonModel {
     public String getImg_url(){return  img_url;}
 
     public String getSprites_url(){return  sprites_url;}
+
+
+    public Boolean getFav() {return isFav;}
+
+    public void setFav(Boolean fav) {isFav = fav;}
 }

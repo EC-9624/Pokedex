@@ -5,10 +5,49 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#313131</color>
+    <color name="white">#FFFFFF</color>
     <color name="grayblue">#567189</color>
     <color name="lightgray">#7B8FA1</color>
     <color name="beige">#CFB997</color>
     <color name="lightbeige">#FAD6A5</color>
+
+    <color name="normal">#87865D</color>
+    <color name="fire">#DD701E</color>
+    <color name="water">#486FC1</color>
+    <color name="eletric">#DAB417</color>
+    <color name="grass">#66AC3C</color>
+    <color name="ice">#6AA6A4</color>
+    <color name="fighting">#9F201B</color>
+    <color name="poison">#832D81</color>
+    <color name="ground">#B1954D</color>
+    <color name="flying">#8670C3</color>
+    <color name="psychic">#C6436B</color>
+    <color name="bug">#A6B91A</color>
+    <color name="rock">#8E7D2B</color>
+    <color name="ghost">#543D71</color>
+    <color name="dragon">#5A2BCC</color>
+    <color name="dark">#503C2E</color>
+    <color name="steel">#818195</color>
+    <color name="fairy">#AA6888</color>
+
+
+<!--<color name="cxx"></color>normal: '#A8A77A',
+	fire: '#EE8130',
+	water: '#6390F0',
+	electric: '#F7D02C',
+	grass: '#7AC74C',
+	ice: '#96D9D6',
+	fighting: '#C22E28',
+	poison: '#A33EA1',
+	ground: '#E2BF65',
+	flying: '#A98FF3',
+	psychic: '#F95587',
+	bug: '#A6B91A',
+	rock: '#B6A136',
+	ghost: '#735797',
+	dragon: '#6F35FC',
+	dark: '#705746',
+	steel: '#B7B7CE',
+	fairy: '#D685AD',-->
 </resources>
