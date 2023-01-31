@@ -1,11 +1,13 @@
 package com.example.pokedex;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
     AssetManager assetManager;
     InputStream inputStream;
     ArrayList<PokemonModel> pokemonModelArrayList = new ArrayList<>();
+    ArrayList<PokemonModel> favList = new ArrayList<>();
     private Poke_RecycleViewAdapter adapter;
 
     @Override
@@ -100,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
 
         intent.putExtra("Name", pokemonModelArrayList.get(position).getEn_name());
+        intent.putExtra("Jpname",pokemonModelArrayList.get(position).getJp_name());
         intent.putExtra("Type_1",pokemonModelArrayList.get(position).getType_1());
         intent.putExtra("Type_2",pokemonModelArrayList.get(position).getType_2());
         intent.putExtra("Hp",pokemonModelArrayList.get(position).getHP());
@@ -150,10 +154,12 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
                 if(favItem.isChecked() == false){
                     favItem.setIcon(R.drawable.ic_baseline_star_24);
                     favItem.setChecked(!favItem.isChecked());
+                    favFilter();
 
                 } else if (favItem.isChecked() == true){
                     favItem.setIcon(R.drawable.ic_baseline_star_border_24);
                     favItem.setChecked(!favItem.isChecked());
+                    changeFavFilter();
 
                 }
 
@@ -162,6 +168,21 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         });
 
         return true;
+    }
+
+    private void favFilter(){
+
+        for(PokemonModel pokemon : pokemonModelArrayList){
+            if(pokemon.getFav() == true ){
+                if(!favList.contains(pokemon)){
+                    favList.add(pokemon);
+                }
+            }
+        }
+        adapter.filterList(favList);
+    }
+    private void changeFavFilter(){
+        adapter.filterList(pokemonModelArrayList);
     }
 
 }

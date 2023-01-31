@@ -5,16 +5,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class DetailActivity extends AppCompatActivity {
 
+
+
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +31,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.pokemon_detail);
 
         String name = getIntent().getStringExtra("Name");
+        String jpName = getIntent().getStringExtra("Jpname");
         String hp = getIntent().getStringExtra("Hp");
         String atk = getIntent().getStringExtra("Attack");
         String def = getIntent().getStringExtra("Defense");
@@ -34,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //TextView
         TextView tvName = findViewById(R.id.tvDetail_name);
+        TextView tvJpName = findViewById(R.id.tv_jpName);
         TextView tvHp = findViewById(R.id.tvHp);
         TextView tvAtk = findViewById(R.id.tvAtk);
         TextView tvDef = findViewById(R.id.tvDef);
@@ -46,17 +57,19 @@ public class DetailActivity extends AppCompatActivity {
 
 
         tvName.setText(name);
+        tvJpName.setText(jpName);
         tvType1.setText(type1);
         tvType2.setText(type2);
-        tvHp.setText("HP:   "+ "\t" + hp);
-        tvAtk.setText("Atk:  " + "\t"+ atk);
-        tvDef.setText("Def:  "+ "\t" + def);
-        tvSpAtk.setText("Sp.Atk:  " + "\t" + sp_atk);
-        tvSpDef.setText("Sp.Def:  " +"\t" + sp_def);
-        tvSpeed.setText("Speed:  " + "\t" + speed );
+        tvHp.setText(hp);
+        tvAtk.setText(atk);
+        tvDef.setText(def);
+        tvSpAtk.setText(sp_atk);
+        tvSpDef.setText(sp_def);
+        tvSpeed.setText(speed );
         Glide.with(img).load(img_url).into(img);
 
-        //progress bar
+
+
         ProgressBar hpBar = findViewById(R.id.tv_HpBar);
         ProgressBar atkBar = findViewById(R.id.tv_AtkBar);
         ProgressBar defBar = findViewById(R.id.tv_DefBar);
@@ -64,44 +77,23 @@ public class DetailActivity extends AppCompatActivity {
         ProgressBar spDefbar = findViewById(R.id.tv_SpDefBar);
         ProgressBar speedBar = findViewById(R.id.tv_speedBar);
 
-        hpBar.setProgress(Integer.parseInt(hp));
-        atkBar.setProgress(Integer.parseInt(atk));
-        defBar.setProgress(Integer.parseInt(def));
-        spAtkbar.setProgress(Integer.parseInt(sp_atk));
-        spDefbar.setProgress(Integer.parseInt(sp_def));
-        speedBar.setProgress(Integer.parseInt(speed));
+        hpBar.setProgress(Integer.parseInt(hp),true);
+        atkBar.setProgress(Integer.parseInt(atk),true);
+        defBar.setProgress(Integer.parseInt(def),true);
+        spAtkbar.setProgress(Integer.parseInt(sp_atk),true);
+        spDefbar.setProgress(Integer.parseInt(sp_def),true);
+        speedBar.setProgress(Integer.parseInt(speed),true);
+
+
+
+
+
 
         CardView cardView = findViewById(R.id.cv2);
-        cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.lightgray));
-
-
+        cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.grayblue));
 
     }
 
-    private int getCardColor() {
 
-        int result = 0;
-        switch (getIntent().getStringExtra("Type_1")){
-            case "Normal": result = R.color.normal; break;
-            case "Fire": result = R.color.fire;break;
-            case "Water": result = R.color.water; break;
-            case "Electric" : result = R.color.eletric; break;
-            case "Grass" : result = R.color.grass; break;
-            case "Ice" : result = R.color.ice; break;
-            case "Fighting" : result = R.color.fighting; break;
-            case "Bug" : result = R.color.bug; break;
-            case "Poison" : result = R.color.poison; break;
-            case "Ground" : result = R.color.ground; break;
-            case "Flying" : result = R.color.flying; break;
-            case "Psychic" : result = R.color.psychic; break;
-            case "Rock" : result = R.color.rock; break;
-            case "Ghost" : result = R.color.ghost; break;
-            case "Dragon" : result = R.color.dragon; break;
-            case "Dark" : result = R.color.dark; break;
-            case "Steel" : result = R.color.steel; break;
-            case "Fairy" : result = R.color.fairy; break;
-        }
-        return result;
 
-    }
 }

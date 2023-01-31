@@ -79,5 +79,11 @@ public class PokemonModel {
 
     public Boolean getFav() {return isFav;}
 
-    public void setFav(Boolean fav) {isFav = fav;}
+    public void setFav(int id,Boolean fav) {
+        if(getId() == id){
+            isFav = fav;
+        } else {
+            isFav = getFav();
+        }
+    }
 }

@@ -13,6 +13,7 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -41,6 +42,15 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
         this.pokemonModelArrayList = new ArrayList<>(pokemonModelArrayListFull);
         this.recycleViewInterface = recycleViewInterface;
     }
+
+    // method for filtering fav.
+    public void filterList(ArrayList<PokemonModel> filterlist) {
+
+        pokemonModelArrayList = filterlist;
+
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public Poke_RecycleViewAdapter.MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,6 +67,7 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
 
         //assign values to the viewHolder
         holder.tv_Name.setText(pokemonModelArrayList.get(position).getEn_name());
+        holder.tv_jpName.setText(pokemonModelArrayList.get(position).getJp_name());
         holder.tvType_1.setText(pokemonModelArrayList.get(position).getType_1());
         holder.TvType_2.setText(pokemonModelArrayList.get(position).getType_2());
         holder.tv_id.setText("#"+String.format("%03d", pokemonModelArrayList.get(position).getId()));
@@ -74,6 +85,22 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
                         recycleViewInterface.onItemClicked(bundle.getInt("position"));
                     }
                 }
+            }
+        });
+
+        // set imgBtn click listener
+        holder.imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    int pos = holder.getAdapterPosition();
+
+                    if(pokemonModelArrayList.get(pos).getFav() == false){
+
+                        pokemonModelArrayList.get(pos).setFav(pokemonModelArrayList.get(pos).getId(),true);
+                        Log.d("id", "onClick: " + pokemonModelArrayList.get(pos).getId()+ " isFav " + pokemonModelArrayList.get(pos).getFav());
+                        Toast.makeText(view.getContext(), "Add to Favorites...", Toast.LENGTH_SHORT).show();
+                    }
             }
         });
 
@@ -103,7 +130,7 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
                 String pattern =charSequence.toString().toLowerCase().trim();
 
                 for(PokemonModel pokemon : pokemonModelArrayListFull){
-                    if(pokemon.getEn_name().toLowerCase().contains(pattern)){
+                    if(pokemon.getEn_name().toLowerCase().contains(pattern) || pokemon.getJp_name().toLowerCase().contains(pattern)){
                         filteredList.add(pokemon);
                     }
                 }
@@ -123,11 +150,11 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
         }
     };
 
-
     public static class MyviewHolder extends RecyclerView.ViewHolder{
         //grab the view from recycle view layout file
         ImageView imageView;
         TextView tv_Name;
+        TextView tv_jpName;
         TextView tvType_1;
         TextView TvType_2;
         TextView tv_id;
@@ -139,6 +166,7 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
             cardView = itemView.findViewById(R.id.cardView);
             imageView = itemView.findViewById(R.id.imageView);
             tv_Name = itemView.findViewById(R.id.tv_name);
+            tv_jpName = itemView.findViewById(R.id.tv_jpName);
             tvType_1 = itemView.findViewById(R.id.tv_type1);
             TvType_2 = itemView.findViewById(R.id.tv_type2);
             tv_id = itemView.findViewById(R.id.tv_id);
@@ -146,24 +174,6 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
             imageButton.setImageResource(R.drawable.ic_baseline_star_border_24);
             imageButton.setTag(R.drawable.ic_baseline_star_border_24);
 
-
-
-            // set imgBtn click listener
-            imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    //change picture
-                    Integer resource = (Integer) imageButton.getTag();
-                    if(resource == R.drawable.ic_baseline_star_border_24){
-                        imageButton.setImageResource(R.drawable.ic_baseline_star_24);
-                        imageButton.setTag(R.drawable.ic_baseline_star_24);
-                    } else {
-                        imageButton.setImageResource(R.drawable.ic_baseline_star_border_24);
-                        imageButton.setTag(R.drawable.ic_baseline_star_border_24);
-                    }
-                }
-            });
 
         }
 
