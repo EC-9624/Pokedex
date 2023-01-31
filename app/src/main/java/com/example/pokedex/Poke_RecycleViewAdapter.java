@@ -3,6 +3,7 @@ package com.example.pokedex;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +28,17 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
     private final RecycleViewInterface recycleViewInterface;
 
     Context context;
-     ArrayList<PokemonModel> pokemonModelArrayList;
-     ArrayList<PokemonModel> filteredPokemonList = new ArrayList<>();
+    ArrayList<PokemonModel> pokemonModelArrayListFull;
+    ArrayList<PokemonModel> pokemonModelArrayList;
+
 
 
     public Poke_RecycleViewAdapter(Context context, ArrayList<PokemonModel> pokemonModels,
                                    RecycleViewInterface recycleViewInterface){
-        this.context =context;
-        this.pokemonModelArrayList = pokemonModels;
+        this.context = context;
+        this.pokemonModelArrayListFull = pokemonModels;
         //copy The Full arraylist to use in filter
-        this.filteredPokemonList = pokemonModels;
+        this.pokemonModelArrayList = new ArrayList<>(pokemonModelArrayListFull);
         this.recycleViewInterface = recycleViewInterface;
     }
     @NonNull
@@ -51,7 +53,7 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
 
     @SuppressLint("NewApi")
     @Override
-    public void onBindViewHolder(@NonNull Poke_RecycleViewAdapter.MyviewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull Poke_RecycleViewAdapter.MyviewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         //assign values to the viewHolder
         holder.tv_Name.setText(pokemonModelArrayList.get(position).getEn_name());
@@ -59,6 +61,23 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
         holder.TvType_2.setText(pokemonModelArrayList.get(position).getType_2());
         holder.tv_id.setText("#"+String.format("%03d", pokemonModelArrayList.get(position).getId()));
         Glide.with(holder.imageView).load(pokemonModelArrayList.get(position).getSprites_url()).into(holder.imageView);
+
+        //set item click listener
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(recycleViewInterface != null){
+                    int pos = holder.getAdapterPosition();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("position",pokemonModelArrayListFull.indexOf(pokemonModelArrayList.get(position)));
+                    if (pos != RecyclerView.NO_POSITION){
+                        recycleViewInterface.onItemClicked(bundle.getInt("position"));
+                    }
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -69,40 +88,41 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
 
     @Override
     public Filter getFilter() {
-        return pokeFilter;
+        return searchFilter;
     }
 
-    private final Filter pokeFilter = new Filter() {
+    private final Filter searchFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            FilterResults results = new FilterResults();
+            ArrayList<PokemonModel> filteredList = new ArrayList<>();
 
             if(charSequence == null || charSequence.length() == 0){
-                results.values = filteredPokemonList;
-                results.count = filteredPokemonList.size();
-            } else {
 
-                String pattern = charSequence.toString().toLowerCase().trim();
-                ArrayList<PokemonModel> pokemonModels = new ArrayList<>();
-                for(PokemonModel pokemon : filteredPokemonList){
-                    if(pokemon.getEn_name().toLowerCase().contains(pattern)
-                            || pokemon.getType_1().toLowerCase().contains(pattern)
-                            ||(pokemon.getType_2() != null && pokemon.getType_2().toLowerCase().contains(pattern))){
-                        pokemonModels.add(pokemon);
+                filteredList.addAll(pokemonModelArrayListFull);
+            } else {
+                String pattern =charSequence.toString().toLowerCase().trim();
+
+                for(PokemonModel pokemon : pokemonModelArrayListFull){
+                    if(pokemon.getEn_name().toLowerCase().contains(pattern)){
+                        filteredList.add(pokemon);
                     }
                 }
-                results.values = pokemonModels;
-                results.count = pokemonModels.size();
             }
-            return results;
+            FilterResults filterResults = new FilterResults();
+            filterResults.values =filteredList;
+            filterResults.count = filteredList.size();
+
+            return filterResults;
         }
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            pokemonModelArrayList = (ArrayList<PokemonModel>) filterResults.values;
+            pokemonModelArrayList.clear();
+            pokemonModelArrayList.addAll((ArrayList)filterResults.values);
             notifyDataSetChanged();
         }
     };
+
 
     public static class MyviewHolder extends RecyclerView.ViewHolder{
         //grab the view from recycle view layout file
@@ -126,30 +146,13 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
             imageButton.setImageResource(R.drawable.ic_baseline_star_border_24);
             imageButton.setTag(R.drawable.ic_baseline_star_border_24);
 
-            //set item click listener
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(recycleViewInterface != null){
-                        int pos =getAdapterPosition();
-                        if (pos != RecyclerView.NO_POSITION){
-                            recycleViewInterface.onItemClicked(pos);
-                        }
-                    }
-                }
-            });
+
 
             // set imgBtn click listener
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    if(recycleViewInterface != null){
-                        int pos =getAdapterPosition();
-                        if (pos != RecyclerView.NO_POSITION){
-                            recycleViewInterface.onFavIconClicked(pos);
-                        }
-                    }
                     //change picture
                     Integer resource = (Integer) imageButton.getTag();
                     if(resource == R.drawable.ic_baseline_star_border_24){

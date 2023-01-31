@@ -63,17 +63,13 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
 
                 pokemonModelArrayList.add(new PokemonModel(id,english,japanese,type_1,type_2,HP,attack,defense,sp_atk,sp_def,speed));
             }
-//            //test if model is loaded correctly
-//            Log.d("poke.length", "onCreate: " + pokemonModelArrayList.size());
-//            for(int i =0; i< pokemonModelArrayList.size();i++){
-//                PokemonModel pokemon = pokemonModelArrayList.get(i);
-//                Log.d("pokemon", "onCreate: " + pokemon.getEn_name() + ": "+pokemon.getSprites_url());
-//            }
 
             //Pass Model List to Recycler View AFTER creating The model
             adapter = new Poke_RecycleViewAdapter(this,pokemonModelArrayList,this);
-            recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+
+
 
         } catch (JSONException e){
             e.printStackTrace();
@@ -114,12 +110,8 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         intent.putExtra("Speed",pokemonModelArrayList.get(position).getSpeed());
         intent.putExtra("img_url",pokemonModelArrayList.get(position).getImg_url());
 
+
         startActivity(intent);
-    }
-
-    @Override
-    public void onFavIconClicked(int position) {
-
     }
 
 
