@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
     public void onItemClicked(int position) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
 
-        intent.putExtra("Name", pokemonModelArrayList.get(position).getJp_name());
+        intent.putExtra("Name", pokemonModelArrayList.get(position).getEn_name());
         intent.putExtra("Type_1",pokemonModelArrayList.get(position).getType_1());
         intent.putExtra("Type_2",pokemonModelArrayList.get(position).getType_2());
         intent.putExtra("Hp",pokemonModelArrayList.get(position).getHP());

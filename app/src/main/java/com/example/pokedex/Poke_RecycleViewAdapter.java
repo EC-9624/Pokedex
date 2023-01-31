@@ -89,7 +89,9 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
                 String pattern = charSequence.toString().toLowerCase().trim();
                 ArrayList<PokemonModel> pokemonModels = new ArrayList<>();
                 for(PokemonModel pokemon : filteredPokemonList){
-                    if(pokemon.getEn_name().toLowerCase().contains(pattern)){
+                    if(pokemon.getEn_name().toLowerCase().contains(pattern)
+                            || pokemon.getType_1().toLowerCase().contains(pattern)
+                            ||(pokemon.getType_2() != null && pokemon.getType_2().toLowerCase().contains(pattern))){
                         pokemonModels.add(pokemon);
                     }
                 }
