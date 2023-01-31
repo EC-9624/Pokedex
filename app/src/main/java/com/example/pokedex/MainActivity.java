@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = findViewById(R.id.mRecylcerview);
-
         assetManager = getResources().getAssets();
 
         try {
