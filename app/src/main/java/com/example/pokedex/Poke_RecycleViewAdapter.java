@@ -59,11 +59,7 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
         holder.TvType_2.setText(pokemonModelArrayList.get(position).getType_2());
         holder.tv_id.setText("#"+String.format("%03d", pokemonModelArrayList.get(position).getId()));
         Glide.with(holder.imageView).load(pokemonModelArrayList.get(position).getSprites_url()).into(holder.imageView);
-        //holder.imageView.setBackgroundColor(holder.itemView.getResources().getColor(getCardColor(position),null));
-
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -148,8 +144,14 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
                 @Override
                 public void onClick(View view) {
 
+                    if(recycleViewInterface != null){
+                        int pos =getAdapterPosition();
+                        if (pos != RecyclerView.NO_POSITION){
+                            recycleViewInterface.onFavIconClicked(pos);
+                        }
+                    }
+                    //change picture
                     Integer resource = (Integer) imageButton.getTag();
-                    Log.d("","onClick: "+ resource);
                     if(resource == R.drawable.ic_baseline_star_border_24){
                         imageButton.setImageResource(R.drawable.ic_baseline_star_24);
                         imageButton.setTag(R.drawable.ic_baseline_star_24);

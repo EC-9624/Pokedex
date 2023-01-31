@@ -1,23 +1,19 @@
 package com.example.pokedex;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 //import android.widget.SearchView;
 import  androidx.appcompat.widget.SearchView;
 
-import android.widget.ImageButton;
-import android.widget.ImageSwitcher;
-import android.widget.Toast;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -121,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         startActivity(intent);
     }
 
+    @Override
+    public void onFavIconClicked(int position) {
+
+    }
 
 
     //create menu
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
             }
         });
         MenuItem favItem = menu.findItem(R.id.action_Fav);
-        favItem.setChecked(false);
+
 
         favItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
                 if(favItem.isChecked() == false){
                     favItem.setIcon(R.drawable.ic_baseline_star_24);
                     favItem.setChecked(!favItem.isChecked());
-
 
                 } else if (favItem.isChecked() == true){
                     favItem.setIcon(R.drawable.ic_baseline_star_border_24);
