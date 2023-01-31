@@ -2,37 +2,41 @@ package com.example.pokedex;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleViewAdapter.MyviewHolder> {
+
+public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleViewAdapter.MyviewHolder> implements Filterable {
     private final RecycleViewInterface recycleViewInterface;
 
     Context context;
-     ArrayList<PokemonModel> pokemonModels;
+     ArrayList<PokemonModel> pokemonModelArrayList;
+     ArrayList<PokemonModel> filteredPokemonList = new ArrayList<>();
+
 
     public Poke_RecycleViewAdapter(Context context, ArrayList<PokemonModel> pokemonModels,
                                    RecycleViewInterface recycleViewInterface){
         this.context =context;
-        this.pokemonModels = pokemonModels;
+        this.pokemonModelArrayList = pokemonModels;
+        //copy The Full arraylist to use in filter
+        this.filteredPokemonList = pokemonModels;
         this.recycleViewInterface = recycleViewInterface;
     }
     @NonNull
@@ -50,29 +54,57 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
     public void onBindViewHolder(@NonNull Poke_RecycleViewAdapter.MyviewHolder holder, int position) {
 
         //assign values to the viewHolder
-        holder.tv_Name.setText(pokemonModels.get(position).getJp_name());
-        holder.tvType_1.setText(pokemonModels.get(position).getType_1());
-        holder.TvType_2.setText(pokemonModels.get(position).getType_2());
-        holder.tv_id.setText("#"+String.format("%03d", pokemonModels.get(position).getId()));
-        Glide.with(holder.imageView).load(pokemonModels.get(position).getSprites_url()).into(holder.imageView);
+        holder.tv_Name.setText(pokemonModelArrayList.get(position).getEn_name());
+        holder.tvType_1.setText(pokemonModelArrayList.get(position).getType_1());
+        holder.TvType_2.setText(pokemonModelArrayList.get(position).getType_2());
+        holder.tv_id.setText("#"+String.format("%03d", pokemonModelArrayList.get(position).getId()));
+        Glide.with(holder.imageView).load(pokemonModelArrayList.get(position).getSprites_url()).into(holder.imageView);
         //holder.imageView.setBackgroundColor(holder.itemView.getResources().getColor(getCardColor(position),null));
 
 
     }
 
 
-
     @Override
     public int getItemCount() {
         //Number of item to display
-        return pokemonModels.size();
+        return pokemonModelArrayList.size();
     }
 
-    public void filterList(ArrayList<PokemonModel> filteredList) {
-        pokemonModels = filteredList;
-
-        notifyDataSetChanged();
+    @Override
+    public Filter getFilter() {
+        return pokeFilter;
     }
+
+    private final Filter pokeFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            FilterResults results = new FilterResults();
+
+            if(charSequence == null || charSequence.length() == 0){
+                results.values = filteredPokemonList;
+                results.count = filteredPokemonList.size();
+            } else {
+
+                String pattern = charSequence.toString().toLowerCase().trim();
+                ArrayList<PokemonModel> pokemonModels = new ArrayList<>();
+                for(PokemonModel pokemon : filteredPokemonList){
+                    if(pokemon.getEn_name().toLowerCase().contains(pattern)){
+                        pokemonModels.add(pokemon);
+                    }
+                }
+                results.values = pokemonModels;
+                results.count = pokemonModels.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            pokemonModelArrayList = (ArrayList<PokemonModel>) filterResults.values;
+            notifyDataSetChanged();
+        }
+    };
 
     public static class MyviewHolder extends RecyclerView.ViewHolder{
         //grab the view from recycle view layout file
@@ -113,12 +145,6 @@ public class Poke_RecycleViewAdapter extends RecyclerView.Adapter<Poke_RecycleVi
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(recycleViewInterface != null){
-                        int pos = getAdapterPosition();
-                        if(pos != RecyclerView.NO_POSITION){
-                            recycleViewInterface.onFavClicked(pos);
-                        }
-                    }
 
                     Integer resource = (Integer) imageButton.getTag();
                     Log.d("","onClick: "+ resource);

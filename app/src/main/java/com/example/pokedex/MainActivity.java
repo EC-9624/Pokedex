@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
     ArrayList<PokemonModel> pokemonModelArrayList = new ArrayList<>();
     private Poke_RecycleViewAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +67,12 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
 
                 pokemonModelArrayList.add(new PokemonModel(id,english,japanese,type_1,type_2,HP,attack,defense,sp_atk,sp_def,speed));
             }
-            //test if model is loaded correctly
-            Log.d("poke.length", "onCreate: " + pokemonModelArrayList.size());
-            for(int i =0; i< pokemonModelArrayList.size();i++){
-                PokemonModel pokemon = pokemonModelArrayList.get(i);
-                Log.d("pokemon", "onCreate: " + pokemon.getEn_name() + ": "+pokemon.getSprites_url());
-            }
+//            //test if model is loaded correctly
+//            Log.d("poke.length", "onCreate: " + pokemonModelArrayList.size());
+//            for(int i =0; i< pokemonModelArrayList.size();i++){
+//                PokemonModel pokemon = pokemonModelArrayList.get(i);
+//                Log.d("pokemon", "onCreate: " + pokemon.getEn_name() + ": "+pokemon.getSprites_url());
+//            }
 
             //Pass Model List to Recycler View AFTER creating The model
             adapter = new Poke_RecycleViewAdapter(this,pokemonModelArrayList,this);
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
     public String loadJson(){
         String json = null;
         try {
-            inputStream = this.getAssets().open("testpoke.json");
+            inputStream = this.getAssets().open("pokedex.json");
             //BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
             int size = inputStream.available();
@@ -122,19 +121,6 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         startActivity(intent);
     }
 
-    @Override
-    public void onFavClicked(int position) {
-
-
-        if(pokemonModelArrayList.get(position).getFav() == false){
-            pokemonModelArrayList.get(position).setFav(true);
-            Toast.makeText(this,"Add To Favorites....",Toast.LENGTH_SHORT).show();
-        }else if(pokemonModelArrayList.get(position).getFav() == true){
-            pokemonModelArrayList.get(position).setFav(false);
-            Toast.makeText(this,"Removed From Favorites....",Toast.LENGTH_SHORT).show();
-        }
-        //Log.d("isFav", "onFavClicked: " + pokemonModelArrayList.get(position).getFav());
-    }
 
 
     //create menu
@@ -148,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         MenuItem searchItem = menu.findItem(R.id.actionSearch);
 
         SearchView searchView = (SearchView) searchItem.getActionView();
-
+        searchView.setQueryHint("Search a pokemon...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -157,8 +143,8 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterText(newText);
-                return true;
+                    adapter.getFilter().filter(newText);
+                return false;
             }
         });
         MenuItem favItem = menu.findItem(R.id.action_Fav);
@@ -170,13 +156,11 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
 
 
                 if(favItem.isChecked() == false){
-                    favFilter();
                     favItem.setIcon(R.drawable.ic_baseline_star_24);
                     favItem.setChecked(!favItem.isChecked());
 
 
                 } else if (favItem.isChecked() == true){
-                    clearFilter();
                     favItem.setIcon(R.drawable.ic_baseline_star_border_24);
                     favItem.setChecked(!favItem.isChecked());
 
@@ -189,39 +173,4 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         return true;
     }
 
-
-
-    //search filter
-    private void filterText(String text) {
-
-        ArrayList<PokemonModel> filteredList = new ArrayList<>();
-        for (PokemonModel pokemon : pokemonModelArrayList) {
-            if (pokemon.getEn_name().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(pokemon);
-            }
-        }
-        if (filteredList.isEmpty()) {
-            Toast.makeText(this, "No Data Found...", Toast.LENGTH_SHORT).show();
-        } else {
-            pokemonModelArrayList = filteredList;
-            adapter.filterList(filteredList);
-        }
-    }
-
-    private void favFilter(){
-        ArrayList<PokemonModel> favFilteredList = new ArrayList<>();
-
-        for(PokemonModel pokemon : pokemonModelArrayList){
-            if(pokemon.getFav() == true){
-                favFilteredList.add(pokemon);
-            } else {
-                pokemonModelArrayList = favFilteredList;
-                adapter.filterList(favFilteredList);
-            }
-        }
-    }
-
-    private void clearFilter(){
-        adapter.filterList(pokemonModelArrayList);
-    }
 }
