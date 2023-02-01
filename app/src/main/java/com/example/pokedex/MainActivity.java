@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import  androidx.appcompat.widget.SearchView;
 
 import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
