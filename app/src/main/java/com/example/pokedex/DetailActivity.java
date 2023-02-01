@@ -21,8 +21,6 @@ import java.util.TimerTask;
 
 public class DetailActivity extends AppCompatActivity {
 
-
-
     @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -55,7 +53,6 @@ public class DetailActivity extends AppCompatActivity {
         TextView tvType2 = findViewById(R.id.tvDetail_type2);
         ImageView img = findViewById(R.id.imageView3);
 
-
         tvName.setText(name);
         tvJpName.setText(jpName);
         tvType1.setText(type1);
@@ -67,7 +64,6 @@ public class DetailActivity extends AppCompatActivity {
         tvSpDef.setText(sp_def);
         tvSpeed.setText(speed );
         Glide.with(img).load(img_url).into(img);
-
 
 
         ProgressBar hpBar = findViewById(R.id.tv_HpBar);
@@ -83,10 +79,6 @@ public class DetailActivity extends AppCompatActivity {
         spAtkbar.setProgress(Integer.parseInt(sp_atk),true);
         spDefbar.setProgress(Integer.parseInt(sp_def),true);
         speedBar.setProgress(Integer.parseInt(speed),true);
-
-
-
-
 
 
         CardView cardView = findViewById(R.id.cv2);
