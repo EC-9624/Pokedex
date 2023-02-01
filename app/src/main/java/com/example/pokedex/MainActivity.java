@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -72,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
 
-
-
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -134,16 +134,18 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                     adapter.getFilter().filter(newText);
-                return false;
+                return true;
             }
         });
         MenuItem favItem = menu.findItem(R.id.action_Fav);
+        Drawable drawable = favItem.getIcon();
+        drawable.mutate();
 
 
         favItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -152,12 +154,12 @@ public class MainActivity extends AppCompatActivity implements RecycleViewInterf
 
 
                 if(favItem.isChecked() == false){
-                    favItem.setIcon(R.drawable.ic_baseline_star_24);
+                    favItem.setIcon(R.drawable.ic_baseline_star_24_white);
                     favItem.setChecked(!favItem.isChecked());
                     favFilter();
 
                 } else if (favItem.isChecked() == true){
-                    favItem.setIcon(R.drawable.ic_baseline_star_border_24);
+                    favItem.setIcon(R.drawable.ic_baseline_star_border_24_white);
                     favItem.setChecked(!favItem.isChecked());
                     changeFavFilter();
 
